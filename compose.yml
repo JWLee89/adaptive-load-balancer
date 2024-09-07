@@ -1,0 +1,29 @@
+services:
+  adaptive-load-balancer:
+    image: ljay189/adaptive-load-balancer # specify name of image on Docker Hub
+    restart: "always" # automatically restart container when server crashes
+    build:
+      context: . # build the image from the Dockerfile in the current directory
+    environment: # set up environment variables
+      LOAD_BALANCER_IP: ${LOAD_BALANCER_IP:-localhost} # Use localhost as the default value
+    ports:
+      - "3000:3000" # expose port 8000 so that applications outside the container can connect to it
+  # db:
+  #   image: postgres:15.2-alpine
+  #   restart: always
+  #   environment:
+  #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - db:/var/lib/postgresql/data
+  # redis:
+  #   image: redis:7.0-alpine
+  #   restart: always
+  #   ports:
+  #     - "6379:6379"
+
+# For setting up postgresql database
+# volumes:
+#   db:
+#     driver: local
