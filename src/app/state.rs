@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use crate::balancer::{load_balancer::LoadBalancerType, round_robin::RoundRobinLoadBalancer};
+use crate::balancer::{base::LoadBalancerType, basic::BasicLoadBalancer};
 use color_eyre::{eyre::eyre, Result};
 use hyper::{body::Incoming, server::conn::http1, service::service_fn, Request, Response};
 use hyper_util::rt::TokioIo;
@@ -17,7 +17,7 @@ pub struct LoadBalancerApp {
 impl Default for LoadBalancerApp {
     fn default() -> Self {
         LoadBalancerApp {
-            load_balancer: Arc::new(RwLock::new(RoundRobinLoadBalancer::default())),
+            load_balancer: Arc::new(RwLock::new(BasicLoadBalancer::default())),
         }
     }
 }
@@ -73,6 +73,7 @@ impl LoadBalancerApp {
             .ok_or_else(|| eyre!("Uri has not host: {}", url))?;
         let port = url.port_u16().unwrap_or(80);
         let addr: String = format!("{}:{}", host, port);
+        println!("Accessing server: {}", host);
 
         // Connect to that server.
         // Alternatively, a keep-alive feature could be useful if requests are frequent.

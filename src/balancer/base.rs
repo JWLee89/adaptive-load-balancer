@@ -7,10 +7,7 @@ use super::server::Server;
 pub type LoadBalancerType = Arc<RwLock<dyn LoadBalancer<Server> + Send + Sync>>;
 
 #[async_trait::async_trait]
-pub trait LoadBalancerTemp<T> {}
-
-#[async_trait::async_trait]
-pub trait LoadBalancer<T>: Send
+pub trait LoadBalancer<T>
 where
     T: Debug + Send,
 {
