@@ -1,25 +1,17 @@
 use color_eyre::eyre::{eyre, Result};
-use std::fmt::Display;
-use url::Url;
+use hyper::Uri;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Server {
-    address: String,
-}
-
-impl Display for Server {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Address: {}", self.address)
-    }
+    pub uri: Uri,
 }
 
 impl Server {
     pub fn new(address: &str) -> Result<Self> {
-        let current_url =
-            Url::parse(address).map_err(|_| eyre!("Cannot parse invalid URL: {:?}", address))?;
-        Ok(Self {
-            address: current_url.to_string(),
-        })
+        let current_url = address
+            .parse::<hyper::Uri>()
+            .map_err(|_| eyre!("Cannot parse invalid URL: {:?}", address))?;
+        Ok(Self { uri: current_url })
     }
 }
 
